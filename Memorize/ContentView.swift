@@ -8,66 +8,58 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State var emojis = ["🛺", "✈️", "🚀", "🛵", "🚁", "🛸", "🛥", "🚆", "🛴", "🚗", "🚕", "🏎", "🦽", "🏍", "🚡"]
-    
-    @State var emojiCount = 8
+    //When something changed - rebuild body
+    @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
-        VStack {
-            Text("Memorize!")
-                .font(.largeTitle)
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
-                    /* Because our Strings of emojis cant be identifiable my themselves,
-                     we need to specify an id's for all of them. So we pointing to SELF
-                     in such manner, that ste STRINGS will me as ID's for views. In this
-                     case if in array will be tho same emojis, same view will rendered twice
-                     and reacts on click on one or another with same behavious (clone cards
-                     with same behaviour)*/
-                    ForEach (emojis[0..<emojiCount], id: \.self) { emoji in
-                            CardView(content: emoji)
-                            .aspectRatio(2/3, contentMode: .fit)
-                    }
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
+                /* Because our Strings of emojis cant be identifiable my themselves,
+                 we need to specify an id's for all of them. So we pointing to SELF
+                 in such manner, that ste STRINGS will me as ID's for views. In this
+                 case if in array will be tho same emojis, same view will rendered twice
+                 and reacts on click on one or another with same behavious (clone cards
+                 with same behaviour)*/
+                ForEach (viewModel.cards) { card in
+                    CardView(card: card)
+                        .aspectRatio(2/3, contentMode: .fit)
+                        .onTapGesture {
+                            viewModel.choose(card)
+                        }
                 }
-                .padding(.horizontal)
-                .foregroundColor(.red)
             }
-            Spacer()
+            .padding(.horizontal)
+            .foregroundColor(.red)
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        let game = EmojiMemoryGame()
+        ContentView(viewModel: game)
 .previewInterfaceOrientation(.portrait)
     }
 }
 
 struct CardView: View {
-    
-    var content: String
-    @State var isFaceUp = true
+    let card: MemoryGame<String>.Card
     
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: 20)
         ZStack {
-            if isFaceUp {
+            if card.isFaceUp {
                 shape
                     .fill()
                     .foregroundColor(.white)
                 shape
                 // Strokes inside of the shape instead of simple stroke
                     .strokeBorder(lineWidth: 3)
-                Text(content)
+                Text(card.content)
                     .font(.largeTitle)
             } else {
                 shape.fill()
             }
-        }
-        .onTapGesture {
-            isFaceUp = !isFaceUp
         }
     }
 }

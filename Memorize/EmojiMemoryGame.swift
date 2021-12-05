@@ -9,7 +9,7 @@ import SwiftUI
 
 
 // ViewModel for our memorize game
-class EmojiMemoryGame {
+class EmojiMemoryGame: ObservableObject {
     // to have emojis available before initializing, we make this constant static
     static let emojis = ["🛺", "✈️", "🚀", "🛵", "🚁", "🛸", "🛥", "🚆", "🛴", "🚗", "🚕", "🏎", "🦽", "🏍", "🚡"]
     
@@ -19,10 +19,18 @@ class EmojiMemoryGame {
             emojis[pairIndex] }
     }
     
-    private var model: MemoryGame<String> = createMemoryGame()
+    @Published private var model: MemoryGame<String> = createMemoryGame()
     
     
     var cards: Array<MemoryGame<String>.Card> {
-        return model.cards
+        model.cards
     }
+    
+     
+    // MARK: - Intent(s)
+     
+    func choose(_ card: MemoryGame<String>.Card) {
+        model.choose(card)
+    }
+    
 }
