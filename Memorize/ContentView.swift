@@ -10,10 +10,6 @@ import SwiftUI
 struct ContentView: View {
     
     @State var emojis = ["🛺", "✈️", "🚀", "🛵", "🚁", "🛸", "🛥", "🚆", "🛴", "🚗", "🚕", "🏎", "🦽", "🏍", "🚡"]
-    @State var isNewTheme = false
-    let vehicles = ["🛺", "✈️", "🚀", "🛵", "🚁", "🛸", "🛥", "🚆", "🛴", "🚗", "🚕", "🏎", "🏍", "🚡"]
-    let activities = ["⚽️", "🏑", "⛳️", "⛸", "🪂", "🛹", "🤿", "🏆", "🥇", "🎧", "🎲"]
-    let food = ["🍎", "🍒", "🥝", "🥐", "🫒", "🥦", "🦴", "🍖", "🧄", "🍔"]
     
     @State var emojiCount = 8
     
@@ -38,56 +34,6 @@ struct ContentView: View {
                 .foregroundColor(.red)
             }
             Spacer()
-            HStack {
-                Vehicles
-                Activities
-                Food
-                Spacer()
-            }
-            
-            .font(.largeTitle)
-            .padding(.horizontal)
-        }
-    }
-    
-    var Vehicles: some View {
-        Button {
-            emojis = vehicles
-            emojis.shuffle()
-        } label: {
-            VStack {
-                Image(systemName: "car")
-                Text("Vehicles")
-                    .font(.caption2)
-            }
-        }
-    }
-    
-    var Activities: some View {
-        Button {
-            emojis = activities
-            emojis.shuffle()
-
-        } label: {
-            VStack {
-                Image(systemName: "sportscourt")
-                Text("Activities")
-                    .font(.caption2)
-            }
-        }
-    }
-    
-    var Food: some View {
-        Button {
-            emojis = food
-            emojis.shuffle()
-
-        } label: {
-            VStack {
-                Image(systemName: "arrow.up.heart")
-                Text("Food")
-                    .font(.caption2)
-            }
         }
     }
 }
