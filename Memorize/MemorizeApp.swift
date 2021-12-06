@@ -10,11 +10,11 @@ import SwiftUI
 @main
 struct MemorizeApp: App {
     // let for constant POINTER to our class (that can have changes inside of it)
-    let game = EmojiMemoryGame()
+    private let game = EmojiMemoryGame()
     
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: game)
+            EmojiMemoryGameView(game: game)
         }
     }
 }
