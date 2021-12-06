@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // A model for our memorize game
 // where cardcontent - turns generic type to generic where content must be equatable
@@ -34,7 +35,6 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             } else {
                 indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
-            cards[chosenIndex].isFaceUp.toggle()
         }
     }
     
@@ -66,5 +66,11 @@ extension Array {
         } else {
             return nil
         }
+    }
+}
+
+struct MemoryGame_Previews: PreviewProvider {
+    static var previews: some View {
+        /*@START_MENU_TOKEN@*/Text("Hello, World!")/*@END_MENU_TOKEN@*/
     }
 }
