@@ -8,24 +8,36 @@
 import Foundation
 
 // A model for our memorize game
-struct MemoryGame<CardContent> {
+// where cardcontent - turns generic type to generic where content must be equatable
+struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
+    
+    // variable is initialized with optional.none when class is created
+    private var indexOfTheOneAndOnlyFaceUpCard: Int?
     
     mutating func choose(_ card: Card) {
         // Need to find card in array of cards and toggle isFaceUp
-        let chosenIndex = index(of: card)
-        cards[chosenIndex].isFaceUp.toggle()
+        if let chosenIndex = cards.firstIndex(where: {$0.id == card.id}),
+            !cards[chosenIndex].isFaceUp,
+            !cards[chosenIndex].isMatched
+        {
+            // Need to find if there is a card open and the second is matched. If not - close both when third is clicked.
+            if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+                if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                    cards[chosenIndex].isMatched = true
+                    cards[potentialMatchIndex].isMatched = true
+                }
+                indexOfTheOneAndOnlyFaceUpCard = nil
+            } else {
+                for index in cards.indices {
+                    cards[index].isFaceUp = false
+                }
+                indexOfTheOneAndOnlyFaceUpCard = chosenIndex
+            }
+            cards[chosenIndex].isFaceUp.toggle()
+        }
     }
     
-    // Using internal and external name for better readability
-    func index(of card: Card) -> Int {
-        for index in 0..<cards.count {
-            if cards[index].id == card.id {
-                return index
-            }
-        }
-        return 0
-    }
     
     // Init for struct with function (createCardCOntent) as an argument to create a card content
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
@@ -39,7 +51,7 @@ struct MemoryGame<CardContent> {
     }
     
     struct Card: Identifiable {
-        var isFaceUp: Bool = true
+        var isFaceUp: Bool = false
         var isMatched: Bool = false
         // here we use generics (don't care type) for future use by various types
         var content: CardContent
