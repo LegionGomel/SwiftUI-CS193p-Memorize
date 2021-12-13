@@ -51,7 +51,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Identifiable {
-        var isFaceUp = true
+        var isFaceUp = false
         var isMatched = false
         // here we use generics (don't care type) for future use by various types
         let content: CardContent

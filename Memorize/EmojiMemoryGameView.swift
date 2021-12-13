@@ -41,39 +41,33 @@ struct CardView: View {
     let card: MemoryGame<String>.Card
     
     var body: some View {
-        GeometryReader(content: { geometry in
-            let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+        GeometryReader { geometry in
             ZStack {
-                if card.isFaceUp {
-                    shape
-                        .fill()
-                        .foregroundColor(.white)
-                    shape
-                    // Strokes inside of the shape instead of simple stroke
-                        .strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                    Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: 120-90))
-                        .padding(5)
-                        .opacity(0.5)
-                    Text(card.content).font(font(in: geometry.size))
-                } else if card.isMatched {
-                    shape.opacity(0)
-                } else {
-                    shape.fill()
-                }
+                Pie(startAngle: Angle(degrees: 0-90), endAngle: Angle(degrees: 120-90))
+                    .padding(5)
+                    .opacity(0.5)
+                Text(card.content)
+                    .rotationEffect(Angle.degrees(card.isMatched ? 360 : 0))
+                    .animation(Animation.easeInOut)
+                    .font(Font.system(size: DrawingConstants.fontSize))
+                    .scaleEffect(scale(thatFits: geometry.size))
             }
-        })
+            .cardify(isFaceUp: card.isFaceUp)
+        }
     }
     
-    // A function to make a clean look to our cardView
-    // Making a font size is minimum from height or width of card size and slightly less
-    // using geometry parameters.
-    private func font(in size: CGSize) -> Font {
-        Font.system(size: min(size.width, size.height) * DrawingConstants.fontScale)
+    private func scale(thatFits size: CGSize) ->CGFloat {
+        min(size.width, size.height) / (DrawingConstants.fontSize / DrawingConstants.fontScale)
     }
     
     private struct DrawingConstants {
-        static let cornerRadius: CGFloat = 10
-        static let lineWidth: CGFloat = 3
+        static let fontSize: CGFloat = 32
         static let fontScale: CGFloat = 0.70
+    }
+}
+
+extension View {
+    func cardify(isFaceUp: Bool) -> some View {
+        return self.modifier(Cardify(isFaceUp: isFaceUp))
     }
 }
